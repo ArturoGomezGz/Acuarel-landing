@@ -2,6 +2,13 @@
 import { Image } from 'astro:assets';
 import { logosClientes, clientes } from '../data/clientes';
 import TituloSeccion from './TituloSeccion.astro';
+
+/*
+ * Los cinco logotipos se repiten cuatro veces y la pista se desplaza un 50 %:
+ * como el patrón es periódico cada repetición, el reinicio es invisible y la
+ * pista siempre es más ancha que la pantalla, sin huecos en monitores grandes.
+ */
+const repeticionesLogos = 4;
 ---
 
 <section id="clientes" class="border-y border-arena-200 bg-arena-50 py-20 lg:py-28">
@@ -12,44 +19,50 @@ import TituloSeccion from './TituloSeccion.astro';
       descripcion="Más de treinta obras entregadas en Jalisco, Nayarit, Colima, Michoacán, Sinaloa, Tabasco y Guatemala."
       class="mx-auto text-center"
     />
+  </div>
 
-    <ul class="revelar mt-14 grid grid-cols-2 items-center gap-8 sm:grid-cols-3 lg:grid-cols-5">
+  <!-- Carrusel de logotipos -->
+  <div class="revelar marquee mt-14 overflow-hidden" style="--duracion: 45s">
+    <ul class="marquee-pista flex items-center gap-16 sm:gap-20">
       {
-        logosClientes.map((cliente) => (
-          <li class="flex justify-center">
-            <Image
-              src={cliente.imagen}
-              alt={cliente.nombre}
-              widths={[160, 320]}
-              sizes="160px"
-              class="h-20 w-auto opacity-75 mix-blend-multiply grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
-              loading="lazy"
-            />
-          </li>
-        ))
+        Array.from({ length: repeticionesLogos }).flatMap((_, ronda) =>
+          logosClientes.map((cliente) => (
+            <li class="shrink-0">
+              <Image
+                src={cliente.imagen}
+                alt={ronda === 0 ? cliente.nombre : ''}
+                widths={[160, 320]}
+                sizes="160px"
+                class="h-20 w-auto mix-blend-multiply grayscale transition duration-300 hover:grayscale-0"
+                loading="lazy"
+                aria-hidden={ronda === 0 ? undefined : 'true'}
+              />
+            </li>
+          )),
+        )
       }
     </ul>
+  </div>
 
-    <details class="revelar group mx-auto mt-14 max-w-5xl">
-      <summary
-        class="mx-auto flex w-fit cursor-pointer list-none items-center gap-2 rounded-full border border-marino-700/25 px-5 py-2.5 text-sm font-semibold text-marino-700 transition hover:bg-marino-700 hover:text-white"
-      >
-        <span class="group-open:hidden">Ver los {clientes.length} clientes</span>
-        <span class="hidden group-open:inline">Ocultar lista</span>
-      </summary>
-
-      <ul
-        class="mt-10 grid gap-x-8 gap-y-3 border-t border-arena-200 pt-10 sm:grid-cols-2 lg:grid-cols-3"
-      >
-        {
+  <!-- Carrusel de nombres, en sentido contrario para que las dos filas no se lean como una sola -->
+  <div
+    class="revelar marquee mt-10 overflow-hidden"
+    style="--duracion: 90s; --direccion: reverse"
+  >
+    <ul class="marquee-pista flex items-center gap-3">
+      {
+        [0, 1].flatMap((ronda) =>
           clientes.map((cliente) => (
-            <li class="flex flex-col border-l-2 border-arena-200 pl-3.5 text-sm">
+            <li
+              class="shrink-0 rounded-full border border-arena-200 bg-white px-4 py-2 text-sm whitespace-nowrap"
+              aria-hidden={ronda === 0 ? undefined : 'true'}
+            >
               <span class="font-semibold text-marino-900">{cliente.nombre}</span>
-              <span class="text-marino-900/55">{cliente.ubicacion}</span>
+              <span class="text-marino-900/50"> · {cliente.ubicacion}</span>
             </li>
-          ))
-        }
-      </ul>
-    </details>
+          )),
+        )
+      }
+    </ul>
   </div>
 </section>

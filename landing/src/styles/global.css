@@ -84,6 +84,54 @@ body {
   }
 }
 
+/*
+ * Carrusel infinito de logotipos.
+ * La pista contiene la lista duplicada, así que desplazarla justo un 50 %
+ * deja la copia exactamente donde estaba el original y el ciclo es imperceptible.
+ */
+@keyframes desplazar {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee {
+  /* Difumina los extremos para que los logos no aparezcan de golpe. */
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 6rem,
+    black calc(100% - 6rem),
+    transparent
+  );
+}
+
+.marquee-pista {
+  animation: desplazar var(--duracion, 40s) linear infinite;
+  animation-direction: var(--direccion, normal);
+  width: max-content;
+}
+
+/* Detener al pasar el cursor deja leer un logotipo concreto. */
+.marquee:hover .marquee-pista,
+.marquee:focus-within .marquee-pista {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    overflow-x: auto;
+    mask-image: none;
+  }
+
+  .marquee-pista {
+    animation: none;
+  }
+}
+
 :focus-visible {
   outline: 3px solid var(--color-agua-500);
   outline-offset: 2px;
