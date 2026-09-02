@@ -191,7 +191,7 @@ assets/originales/
 ## 5. Pendientes por confirmar con el cliente
 
 - [ ] Email de contacto oficial
-- [ ] Número de WhatsApp
+- [x] Número de WhatsApp — 33 3460 6118
 - [ ] Horarios de atención
 - [ ] Logo en vectorial (SVG/AI/EPS)
 - [ ] ¿Se mantiene la página de Facebook? ¿Hay Instagram?

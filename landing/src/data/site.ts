@@ -25,10 +25,9 @@ export const contacto = {
     { display: '(33) 3810-7600', tel: '+523338107600' },
     { display: '(33) 3811-4238', tel: '+523338114238' },
   ],
-  // PENDIENTE: confirmar el número de WhatsApp oficial.
-  // Mientras tanto se usa el primer teléfono fijo; si no tiene WhatsApp,
-  // el botón flotante debe ocultarse (ver `mostrarWhatsapp`).
-  whatsapp: '+523336273634',
+  // Número de WhatsApp de la empresa. Si algún día dejara de usarse,
+  // basta poner `mostrarWhatsapp` en false para ocultar el botón flotante.
+  whatsapp: '+523334606118',
   mostrarWhatsapp: true,
   mensajeWhatsapp:
     'Hola, me interesa cotizar una piscina con Piscinas Acuarel. ¿Me pueden dar informes?',
