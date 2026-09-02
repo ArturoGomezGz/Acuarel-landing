@@ -83,74 +83,79 @@ const telPrincipal = contacto.telefonos[0];
       </button>
     </div>
   </div>
-
-  <!-- Menú móvil -->
-  <div
-    id="menu-movil"
-    class="fixed inset-0 z-50 hidden bg-marino-900/98 backdrop-blur lg:hidden"
-    data-menu-movil
-  >
-    <div class="flex items-center justify-between px-4 py-3 sm:px-6">
-      <Image
-        src={logo}
-        alt="Piscinas Acuarel"
-        widths={[200, 400]}
-        sizes="200px"
-        class="h-10 w-auto"
-        loading="eager"
-      />
-      <button
-        type="button"
-        class="rounded-lg p-2 text-white transition hover:bg-white/10"
-        aria-label="Cerrar menú"
-        data-cerrar-menu
-      >
-        <Icono nombre="cerrar" class="h-6 w-6" />
-      </button>
-    </div>
-
-    <nav class="px-6 pt-6" aria-label="Principal (móvil)">
-      <ul class="flex flex-col gap-1">
-        {
-          enlaces.map((enlace) => (
-            <li>
-              <a
-                href={enlace.href}
-                class="block rounded-xl px-4 py-4 font-display text-2xl text-white transition hover:bg-white/10"
-                data-cierra-al-navegar
-              >
-                {enlace.texto}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-
-      <div class="mt-8 space-y-3 border-t border-white/15 pt-8">
-        {
-          contacto.telefonos.map((t) => (
-            <a
-              href={`tel:${t.tel}`}
-              class="flex items-center gap-3 text-lg font-medium text-white/85 transition hover:text-white"
-            >
-              <Icono nombre="telefono" class="h-5 w-5 text-agua-300" />
-              {t.display}
-            </a>
-          ))
-        }
-        <a
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener"
-          class="mt-4 flex items-center justify-center gap-2 rounded-xl bg-oro-400 px-5 py-4 text-base font-bold text-marino-900"
-        >
-          <Icono nombre="whatsapp" class="h-5 w-5" />
-          Cotizar por WhatsApp
-        </a>
-      </div>
-    </nav>
-  </div>
 </header>
+
+<!--
+  El menú vive FUERA del <header> a propósito: al hacer scroll el header recibe
+  `backdrop-blur`, y `backdrop-filter` convierte al elemento en bloque contenedor
+  de sus descendientes `position: fixed`. Dentro del header, este panel se
+  colapsaba a la altura de la barra en lugar de cubrir la pantalla.
+-->
+<div
+  id="menu-movil"
+  class="fixed inset-0 z-50 hidden overflow-y-auto overscroll-contain bg-marino-900/98 backdrop-blur lg:hidden"
+  data-menu-movil
+>
+  <div class="flex items-center justify-between px-4 py-3 sm:px-6">
+    <Image
+      src={logo}
+      alt="Piscinas Acuarel"
+      widths={[200, 400]}
+      sizes="200px"
+      class="h-10 w-auto"
+      loading="eager"
+    />
+    <button
+      type="button"
+      class="rounded-lg p-2 text-white transition hover:bg-white/10"
+      aria-label="Cerrar menú"
+      data-cerrar-menu
+    >
+      <Icono nombre="cerrar" class="h-6 w-6" />
+    </button>
+  </div>
+
+  <nav class="px-6 pt-6 pb-12" aria-label="Principal (móvil)">
+    <ul class="flex flex-col gap-1">
+      {
+        enlaces.map((enlace) => (
+          <li>
+            <a
+              href={enlace.href}
+              class="block rounded-xl px-4 py-4 font-display text-2xl text-white transition hover:bg-white/10"
+              data-cierra-al-navegar
+            >
+              {enlace.texto}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="mt-8 space-y-3 border-t border-white/15 pt-8">
+      {
+        contacto.telefonos.map((t) => (
+          <a
+            href={`tel:${t.tel}`}
+            class="flex items-center gap-3 text-lg font-medium text-white/85 transition hover:text-white"
+          >
+            <Icono nombre="telefono" class="h-5 w-5 text-agua-300" />
+            {t.display}
+          </a>
+        ))
+      }
+      <a
+        href={whatsappUrl}
+        target="_blank"
+        rel="noopener"
+        class="mt-4 flex items-center justify-center gap-2 rounded-xl bg-oro-400 px-5 py-4 text-base font-bold text-marino-900"
+      >
+        <Icono nombre="whatsapp" class="h-5 w-5" />
+        Cotizar por WhatsApp
+      </a>
+    </div>
+  </nav>
+</div>
 
 <script>
   const header = document.querySelector<HTMLElement>('[data-header]');
