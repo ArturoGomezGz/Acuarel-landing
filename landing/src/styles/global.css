@@ -132,6 +132,80 @@ body {
   }
 }
 
+/*
+ * Menú móvil.
+ * Abre con un fundido corto y el contenido entra escalonado; al cerrar todo
+ * sale a la vez y más rápido, porque un cierre escalonado se siente lento.
+ * `visibility` acompaña a la opacidad para que el panel cerrado no intercepte
+ * toques ni reciba el foco por tabulador.
+ */
+.panel-movil {
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 0.2s ease-out,
+    visibility 0.2s;
+}
+
+.panel-movil[data-abierto] {
+  visibility: visible;
+  opacity: 1;
+  transition-duration: 0.3s;
+}
+
+.panel-item {
+  opacity: 0;
+  transform: translateY(0.75rem);
+  transition:
+    opacity 0.18s ease-out,
+    transform 0.18s ease-out;
+}
+
+.panel-movil[data-abierto] .panel-item {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.4s ease-out,
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  /* Cada elemento arranca un poco después que el anterior. */
+  transition-delay: calc(80ms + var(--indice, 0) * 45ms);
+}
+
+/*
+ * Ícono hamburguesa: las tres barras se juntan y giran hasta formar una X.
+ * El estado lo dicta `aria-expanded`, así que la animación y lo que anuncian
+ * los lectores de pantalla no pueden desincronizarse.
+ */
+.barra {
+  display: block;
+  height: 2px;
+  width: 1.5rem;
+  border-radius: 2px;
+  background-color: currentColor;
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease-out;
+}
+
+[aria-expanded='true'] .barra-1 {
+  transform: translateY(7px) rotate(45deg);
+}
+
+[aria-expanded='true'] .barra-2 {
+  opacity: 0;
+  transform: scaleX(0.4);
+}
+
+[aria-expanded='true'] .barra-3 {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Un guiño al pasar el cursor, sin llegar a moverse de sitio. */
+[aria-expanded='false']:hover .barra-2 {
+  transform: scaleX(0.65);
+  transform-origin: left;
+}
+
 :focus-visible {
   outline: 3px solid var(--color-agua-500);
   outline-offset: 2px;

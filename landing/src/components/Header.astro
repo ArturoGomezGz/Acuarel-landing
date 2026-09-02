@@ -79,7 +79,11 @@ const telPrincipal = contacto.telefonos[0];
         data-abrir-menu
         data-nav-link
       >
-        <Icono nombre="menu" class="h-6 w-6" />
+        <span class="flex h-6 w-6 flex-col justify-center gap-[5px]" aria-hidden="true">
+          <span class="barra barra-1"></span>
+          <span class="barra barra-2"></span>
+          <span class="barra barra-3"></span>
+        </span>
       </button>
     </div>
   </div>
@@ -93,10 +97,10 @@ const telPrincipal = contacto.telefonos[0];
 -->
 <div
   id="menu-movil"
-  class="fixed inset-0 z-50 hidden overflow-y-auto overscroll-contain bg-marino-900/98 backdrop-blur lg:hidden"
+  class="panel-movil fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-marino-900/98 backdrop-blur lg:hidden"
   data-menu-movil
 >
-  <div class="flex items-center justify-between px-4 py-3 sm:px-6">
+  <div class="panel-item flex items-center justify-between px-4 py-3 sm:px-6">
     <Image
       src={logo}
       alt="Piscinas Acuarel"
@@ -109,17 +113,22 @@ const telPrincipal = contacto.telefonos[0];
       type="button"
       class="rounded-lg p-2 text-white transition hover:bg-white/10"
       aria-label="Cerrar menú"
+      aria-expanded="true"
       data-cerrar-menu
     >
-      <Icono nombre="cerrar" class="h-6 w-6" />
+      <span class="flex h-6 w-6 flex-col justify-center gap-[5px]" aria-hidden="true">
+        <span class="barra barra-1"></span>
+        <span class="barra barra-2"></span>
+        <span class="barra barra-3"></span>
+      </span>
     </button>
   </div>
 
   <nav class="px-6 pt-6 pb-12" aria-label="Principal (móvil)">
     <ul class="flex flex-col gap-1">
       {
-        enlaces.map((enlace) => (
-          <li>
+        enlaces.map((enlace, i) => (
+          <li class="panel-item" style={`--indice: ${i + 1}`}>
             <a
               href={enlace.href}
               class="block rounded-xl px-4 py-4 font-display text-2xl text-white transition hover:bg-white/10"
@@ -132,7 +141,10 @@ const telPrincipal = contacto.telefonos[0];
       }
     </ul>
 
-    <div class="mt-8 space-y-3 border-t border-white/15 pt-8">
+    <div
+      class="panel-item mt-8 space-y-3 border-t border-white/15 pt-8"
+      style={`--indice: ${enlaces.length + 1}`}
+    >
       {
         contacto.telefonos.map((t) => (
           <a
@@ -184,13 +196,21 @@ const telPrincipal = contacto.telefonos[0];
   alternarFondo();
   window.addEventListener('scroll', alternarFondo, { passive: true });
 
+  const estaAbierto = () => menu?.hasAttribute('data-abierto') ?? false;
+
   const alternarMenu = (abierto: boolean) => {
     if (!menu || !abrir) return;
-    menu.classList.toggle('hidden', !abierto);
+
+    menu.toggleAttribute('data-abierto', abierto);
     abrir.setAttribute('aria-expanded', String(abierto));
     document.body.style.overflow = abierto ? 'hidden' : '';
-    if (abierto) cerrar?.focus();
-    else abrir.focus();
+
+    if (abierto) {
+      cerrar?.focus();
+    } else {
+      abrir.focus();
+      menu.scrollTop = 0;
+    }
   };
 
   abrir?.addEventListener('click', () => alternarMenu(true));
@@ -201,8 +221,6 @@ const telPrincipal = contacto.telefonos[0];
   }
 
   document.addEventListener('keydown', (evento) => {
-    if (evento.key === 'Escape' && !menu?.classList.contains('hidden')) {
-      alternarMenu(false);
-    }
+    if (evento.key === 'Escape' && estaAbierto()) alternarMenu(false);
   });
 </script>
