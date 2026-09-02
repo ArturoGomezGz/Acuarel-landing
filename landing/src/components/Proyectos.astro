@@ -1,0 +1,226 @@
+---
+import { Image } from 'astro:assets';
+import { proyectos, categorias, type Categoria } from '../data/proyectos';
+import TituloSeccion from './TituloSeccion.astro';
+import Icono from './Icono.astro';
+
+const filtros: { valor: Categoria | 'todos'; texto: string }[] = [
+  { valor: 'todos', texto: 'Todos' },
+  ...(Object.entries(categorias) as [Categoria, string][]).map(([valor, texto]) => ({
+    valor,
+    texto,
+  })),
+];
+---
+
+<section id="proyectos" class="bg-marino-950 py-20 lg:py-28">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+      <TituloSeccion
+        etiqueta="Proyectos"
+        titulo="Obras que siguen funcionando décadas después"
+        descripcion="Una selección de piscinas que hemos diseñado y construido en Jalisco, Nayarit, Colima, Michoacán y el resto del país."
+        oscuro
+      />
+
+      <div class="revelar flex flex-wrap gap-2" role="group" aria-label="Filtrar proyectos">
+        {
+          filtros.map((filtro, i) => (
+            <button
+              type="button"
+              class="rounded-full border border-white/20 px-4 py-2 text-sm font-medium text-white/70 transition hover:border-white/40 hover:text-white aria-pressed:border-oro-400 aria-pressed:bg-oro-400 aria-pressed:text-marino-900"
+              data-filtro={filtro.valor}
+              aria-pressed={i === 0 ? 'true' : 'false'}
+            >
+              {filtro.texto}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <div
+      class="mt-12 grid auto-rows-[13rem] grid-flow-dense grid-cols-2 gap-3 sm:auto-rows-[15rem] sm:gap-4 lg:grid-cols-4 lg:gap-5"
+      data-galeria
+    >
+      {
+        proyectos.map((proyecto, i) => (
+          <button
+            type="button"
+            class={`revelar group relative overflow-hidden rounded-xl bg-marino-900 text-left ${
+              proyecto.destacado ? 'col-span-2 row-span-2' : ''
+            }`}
+            data-categoria={proyecto.categoria}
+            data-indice={i}
+            data-abrir-visor
+          >
+            <Image
+              src={proyecto.imagen}
+              alt={proyecto.alt}
+              widths={[400, 800, 1400]}
+              sizes="(min-width: 1024px) 25vw, 50vw"
+              class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+              loading={i < 4 ? 'eager' : 'lazy'}
+            />
+
+            <span class="pointer-events-none absolute inset-0 bg-gradient-to-t from-marino-950/85 via-marino-950/10 to-transparent" />
+
+            <span class="pointer-events-none absolute inset-x-0 bottom-0 p-4 sm:p-5">
+              <span class="block font-display text-lg leading-tight font-semibold text-white sm:text-xl">
+                {proyecto.titulo}
+              </span>
+              <span class="mt-1 block text-sm text-white/70">{proyecto.ubicacion}</span>
+            </span>
+          </button>
+        ))
+      }
+    </div>
+
+    <p class="revelar mt-8 text-sm text-white/45">
+      Fotografías de obras propias. Toque cualquier imagen para verla en grande.
+    </p>
+  </div>
+</section>
+
+<!-- Visor de imagen a pantalla completa -->
+<dialog
+  class="m-auto w-full max-w-6xl bg-transparent p-0 backdrop:bg-marino-950/92 backdrop:backdrop-blur-sm"
+  data-visor
+  aria-label="Visor de proyectos"
+>
+  <div class="relative">
+    <img
+      class="max-h-[82svh] w-full rounded-xl object-contain"
+      data-visor-img
+      alt=""
+      decoding="async"
+    />
+
+    <div class="mt-4 flex items-start justify-between gap-4 px-1">
+      <div>
+        <p class="font-display text-xl font-semibold text-white" data-visor-titulo></p>
+        <p class="mt-0.5 text-sm text-white/60" data-visor-ubicacion></p>
+      </div>
+      <p class="shrink-0 pt-1 text-sm text-white/50" data-visor-contador></p>
+    </div>
+
+    <button
+      type="button"
+      class="absolute top-3 right-3 rounded-full bg-marino-950/70 p-2.5 text-white backdrop-blur transition hover:bg-marino-950"
+      data-visor-cerrar
+      aria-label="Cerrar visor"
+    >
+      <Icono nombre="cerrar" class="h-5 w-5" />
+    </button>
+
+    <button
+      type="button"
+      class="absolute top-1/2 left-3 -translate-y-1/2 rounded-full bg-marino-950/70 p-3 text-white backdrop-blur transition hover:bg-marino-950"
+      data-visor-anterior
+      aria-label="Proyecto anterior"
+    >
+      <Icono nombre="flecha" class="h-5 w-5 rotate-180" />
+    </button>
+
+    <button
+      type="button"
+      class="absolute top-1/2 right-3 -translate-y-1/2 rounded-full bg-marino-950/70 p-3 text-white backdrop-blur transition hover:bg-marino-950"
+      data-visor-siguiente
+      aria-label="Proyecto siguiente"
+    >
+      <Icono nombre="flecha" class="h-5 w-5" />
+    </button>
+  </div>
+</dialog>
+
+<script>
+  const galeria = document.querySelector<HTMLElement>('[data-galeria]');
+  const visor = document.querySelector<HTMLDialogElement>('[data-visor]');
+  const visorImg = document.querySelector<HTMLImageElement>('[data-visor-img]');
+  const visorTitulo = document.querySelector<HTMLElement>('[data-visor-titulo]');
+  const visorUbicacion = document.querySelector<HTMLElement>('[data-visor-ubicacion]');
+  const visorContador = document.querySelector<HTMLElement>('[data-visor-contador]');
+
+  if (galeria && visor && visorImg) {
+    const tarjetas = Array.from(
+      galeria.querySelectorAll<HTMLButtonElement>('[data-abrir-visor]'),
+    );
+
+    // --- Filtros por categoría ---
+    for (const boton of document.querySelectorAll<HTMLButtonElement>('[data-filtro]')) {
+      boton.addEventListener('click', () => {
+        const filtro = boton.dataset.filtro;
+
+        for (const otro of document.querySelectorAll<HTMLButtonElement>('[data-filtro]')) {
+          otro.setAttribute('aria-pressed', String(otro === boton));
+        }
+
+        for (const tarjeta of tarjetas) {
+          const coincide = filtro === 'todos' || tarjeta.dataset.categoria === filtro;
+          tarjeta.hidden = !coincide;
+        }
+      });
+    }
+
+    // --- Visor ---
+    /** Índice dentro de `tarjetas` de la imagen abierta. */
+    let actual = 0;
+
+    const visibles = () => tarjetas.filter((t) => !t.hidden);
+
+    const mostrar = (indice: number) => {
+      const lista = visibles();
+      if (lista.length === 0) return;
+
+      const normalizado = (indice + lista.length) % lista.length;
+      const tarjeta = lista[normalizado];
+      const img = tarjeta.querySelector('img');
+      if (!img) return;
+
+      actual = tarjetas.indexOf(tarjeta);
+
+      // Reutiliza el srcset ya optimizado por Astro en lugar de pedir otra imagen.
+      visorImg.src = img.currentSrc || img.src;
+      visorImg.srcset = img.srcset;
+      visorImg.sizes = '100vw';
+      visorImg.alt = img.alt;
+
+      const titulo = tarjeta.querySelector('span > span');
+      const ubicacion = tarjeta.querySelectorAll('span > span')[1];
+      if (visorTitulo) visorTitulo.textContent = titulo?.textContent ?? '';
+      if (visorUbicacion) visorUbicacion.textContent = ubicacion?.textContent ?? '';
+      if (visorContador) {
+        visorContador.textContent = `${normalizado + 1} / ${lista.length}`;
+      }
+    };
+
+    const mover = (paso: number) => {
+      const lista = visibles();
+      const posicion = lista.indexOf(tarjetas[actual]);
+      mostrar(posicion + paso);
+    };
+
+    for (const tarjeta of tarjetas) {
+      tarjeta.addEventListener('click', () => {
+        mostrar(visibles().indexOf(tarjeta));
+        visor.showModal();
+      });
+    }
+
+    document
+      .querySelector('[data-visor-cerrar]')
+      ?.addEventListener('click', () => visor.close());
+    document.querySelector('[data-visor-anterior]')?.addEventListener('click', () => mover(-1));
+    document.querySelector('[data-visor-siguiente]')?.addEventListener('click', () => mover(1));
+
+    visor.addEventListener('keydown', (evento) => {
+      if (evento.key === 'ArrowLeft') mover(-1);
+      if (evento.key === 'ArrowRight') mover(1);
+    });
+
+    // Cerrar al hacer clic fuera de la imagen.
+    visor.addEventListener('click', (evento) => {
+      if (evento.target === visor) visor.close();
+    });
+  }
+</script>

@@ -1,0 +1,203 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo-piscinas-acuarel.png';
+import { contacto, whatsappUrl } from '../data/site';
+import Icono from './Icono.astro';
+
+const enlaces = [
+  { href: '#servicios', texto: 'Servicios' },
+  { href: '#proyectos', texto: 'Proyectos' },
+  { href: '#nosotros', texto: 'Nosotros' },
+  { href: '#clientes', texto: 'Clientes' },
+  { href: '#contacto', texto: 'Contacto' },
+];
+
+const telPrincipal = contacto.telefonos[0];
+---
+
+<header
+  id="header"
+  class="fixed inset-x-0 top-0 z-50 transition-colors duration-300"
+  data-header
+>
+  <div class="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
+    <a href="#inicio" class="shrink-0" aria-label="Piscinas Acuarel, inicio">
+      <Image
+        src={logo}
+        alt="Piscinas Acuarel"
+        widths={[200, 400]}
+        sizes="200px"
+        class="h-10 w-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.35)] sm:h-12"
+        loading="eager"
+      />
+    </a>
+
+    <nav class="ml-auto hidden lg:block" aria-label="Principal">
+      <ul class="flex items-center gap-1">
+        {
+          enlaces.map((enlace) => (
+            <li>
+              <a
+                href={enlace.href}
+                class="rounded-lg px-3.5 py-2 text-sm font-medium text-white/90 transition hover:bg-white/10 hover:text-white data-[solido]:text-marino-800 data-[solido]:hover:bg-marino-50"
+                data-nav-link
+              >
+                {enlace.texto}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="ml-auto flex items-center gap-2 lg:ml-0">
+      <a
+        href={`tel:${telPrincipal.tel}`}
+        class="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-white/90 transition hover:text-white data-[solido]:text-marino-800 sm:flex"
+        data-nav-link
+      >
+        <Icono nombre="telefono" class="h-4 w-4" />
+        {telPrincipal.display}
+      </a>
+
+      <a
+        href={whatsappUrl}
+        target="_blank"
+        rel="noopener"
+        class="hidden items-center gap-2 rounded-lg bg-oro-400 px-4 py-2.5 text-sm font-bold text-marino-900 shadow-sm transition hover:bg-oro-300 sm:inline-flex"
+      >
+        <Icono nombre="whatsapp" class="h-4 w-4" />
+        Cotizar
+      </a>
+
+      <button
+        type="button"
+        class="rounded-lg p-2 text-white transition hover:bg-white/10 data-[solido]:text-marino-800 data-[solido]:hover:bg-marino-50 lg:hidden"
+        aria-label="Abrir menú"
+        aria-expanded="false"
+        aria-controls="menu-movil"
+        data-abrir-menu
+        data-nav-link
+      >
+        <Icono nombre="menu" class="h-6 w-6" />
+      </button>
+    </div>
+  </div>
+
+  <!-- Menú móvil -->
+  <div
+    id="menu-movil"
+    class="fixed inset-0 z-50 hidden bg-marino-900/98 backdrop-blur lg:hidden"
+    data-menu-movil
+  >
+    <div class="flex items-center justify-between px-4 py-3 sm:px-6">
+      <Image
+        src={logo}
+        alt="Piscinas Acuarel"
+        widths={[200, 400]}
+        sizes="200px"
+        class="h-10 w-auto"
+        loading="eager"
+      />
+      <button
+        type="button"
+        class="rounded-lg p-2 text-white transition hover:bg-white/10"
+        aria-label="Cerrar menú"
+        data-cerrar-menu
+      >
+        <Icono nombre="cerrar" class="h-6 w-6" />
+      </button>
+    </div>
+
+    <nav class="px-6 pt-6" aria-label="Principal (móvil)">
+      <ul class="flex flex-col gap-1">
+        {
+          enlaces.map((enlace) => (
+            <li>
+              <a
+                href={enlace.href}
+                class="block rounded-xl px-4 py-4 font-display text-2xl text-white transition hover:bg-white/10"
+                data-cierra-al-navegar
+              >
+                {enlace.texto}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="mt-8 space-y-3 border-t border-white/15 pt-8">
+        {
+          contacto.telefonos.map((t) => (
+            <a
+              href={`tel:${t.tel}`}
+              class="flex items-center gap-3 text-lg font-medium text-white/85 transition hover:text-white"
+            >
+              <Icono nombre="telefono" class="h-5 w-5 text-agua-300" />
+              {t.display}
+            </a>
+          ))
+        }
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener"
+          class="mt-4 flex items-center justify-center gap-2 rounded-xl bg-oro-400 px-5 py-4 text-base font-bold text-marino-900"
+        >
+          <Icono nombre="whatsapp" class="h-5 w-5" />
+          Cotizar por WhatsApp
+        </a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const menu = document.querySelector<HTMLElement>('[data-menu-movil]');
+  const abrir = document.querySelector<HTMLButtonElement>('[data-abrir-menu]');
+  const cerrar = document.querySelector<HTMLButtonElement>('[data-cerrar-menu]');
+
+  /**
+   * El header arranca transparente sobre el hero y se vuelve sólido al bajar,
+   * momento en el que los enlaces cambian de blanco a azul para conservar contraste.
+   */
+  const alternarFondo = () => {
+    if (!header) return;
+    const solido = window.scrollY > 24;
+
+    header.classList.toggle('bg-white/95', solido);
+    header.classList.toggle('shadow-md', solido);
+    header.classList.toggle('backdrop-blur', solido);
+
+    for (const el of document.querySelectorAll('[data-nav-link]')) {
+      if (solido) el.setAttribute('data-solido', '');
+      else el.removeAttribute('data-solido');
+    }
+  };
+
+  alternarFondo();
+  window.addEventListener('scroll', alternarFondo, { passive: true });
+
+  const alternarMenu = (abierto: boolean) => {
+    if (!menu || !abrir) return;
+    menu.classList.toggle('hidden', !abierto);
+    abrir.setAttribute('aria-expanded', String(abierto));
+    document.body.style.overflow = abierto ? 'hidden' : '';
+    if (abierto) cerrar?.focus();
+    else abrir.focus();
+  };
+
+  abrir?.addEventListener('click', () => alternarMenu(true));
+  cerrar?.addEventListener('click', () => alternarMenu(false));
+
+  for (const enlace of document.querySelectorAll('[data-cierra-al-navegar]')) {
+    enlace.addEventListener('click', () => alternarMenu(false));
+  }
+
+  document.addEventListener('keydown', (evento) => {
+    if (evento.key === 'Escape' && !menu?.classList.contains('hidden')) {
+      alternarMenu(false);
+    }
+  });
+</script>
