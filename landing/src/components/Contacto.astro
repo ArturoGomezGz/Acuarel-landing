@@ -1,0 +1,204 @@
+---
+import { contacto, direccionUnaLinea, whatsappUrl, formEndpoint } from '../data/site';
+import TituloSeccion from './TituloSeccion.astro';
+import Icono from './Icono.astro';
+
+const tiposProyecto = [
+  'Construcción de piscina nueva',
+  'Remodelación de piscina existente',
+  'Mantenimiento',
+  'Equipamiento (filtrado, calentador, iluminación)',
+  'Otro',
+];
+---
+
+<section id="contacto" class="bg-marino-900 py-20 lg:py-28">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="grid gap-14 lg:grid-cols-2 lg:gap-20">
+      <div>
+        <TituloSeccion
+          etiqueta="Contacto"
+          titulo="Cuéntenos qué tiene en mente"
+          descripcion="Escríbanos por WhatsApp o déjenos sus datos: revisamos el proyecto y le damos una propuesta sin compromiso."
+          oscuro
+        />
+
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener"
+          class="revelar mt-10 inline-flex items-center gap-2.5 rounded-xl bg-oro-400 px-7 py-4 text-base font-bold text-marino-900 transition hover:bg-oro-300"
+        >
+          <Icono nombre="whatsapp" class="h-5 w-5" />
+          Cotizar por WhatsApp
+        </a>
+
+        <dl class="revelar mt-12 space-y-8 border-t border-white/10 pt-10">
+          <div class="flex gap-4">
+            <dt class="shrink-0 pt-0.5">
+              <Icono nombre="telefono" class="h-5 w-5 text-agua-300" />
+              <span class="sr-only">Teléfonos</span>
+            </dt>
+            <dd class="flex flex-wrap gap-x-6 gap-y-1">
+              {
+                contacto.telefonos.map((t) => (
+                  <a
+                    href={`tel:${t.tel}`}
+                    class="text-lg font-semibold text-white transition hover:text-agua-300"
+                  >
+                    {t.display}
+                  </a>
+                ))
+              }
+            </dd>
+          </div>
+
+          <div class="flex gap-4">
+            <dt class="shrink-0 pt-0.5">
+              <Icono nombre="ubicacion" class="h-5 w-5 text-agua-300" />
+              <span class="sr-only">Dirección</span>
+            </dt>
+            <dd>
+              <p class="leading-relaxed text-white/80">{direccionUnaLinea}</p>
+              <a
+                href={contacto.mapsUrl}
+                target="_blank"
+                rel="noopener"
+                class="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-agua-300 transition hover:text-agua-200"
+              >
+                Ver en Google Maps
+                <Icono nombre="flecha" class="h-3.5 w-3.5" />
+              </a>
+            </dd>
+          </div>
+        </dl>
+
+        <p class="revelar mt-10 text-sm text-white/40">
+          Trabajos en toda la República Mexicana.
+        </p>
+      </div>
+
+      <div class="revelar">
+        <form
+          class="rounded-2xl bg-white p-7 shadow-2xl shadow-marino-950/30 lg:p-9"
+          action={formEndpoint || undefined}
+          method="POST"
+          data-formulario
+        >
+          <p class="font-display text-2xl font-semibold text-marino-900">
+            Solicitar cotización
+          </p>
+
+          <div class="mt-7 space-y-5">
+            <div>
+              <label for="nombre" class="block text-sm font-semibold text-marino-900">
+                Nombre <span class="text-agua-600">*</span>
+              </label>
+              <input
+                id="nombre"
+                name="nombre"
+                type="text"
+                required
+                autocomplete="name"
+                class="mt-2 w-full rounded-lg border border-arena-200 bg-arena-50/60 px-4 py-3 text-marino-900 transition placeholder:text-marino-900/35 focus:border-agua-400 focus:bg-white"
+                placeholder="Su nombre"
+              />
+            </div>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label for="telefono" class="block text-sm font-semibold text-marino-900">
+                  Teléfono <span class="text-agua-600">*</span>
+                </label>
+                <input
+                  id="telefono"
+                  name="telefono"
+                  type="tel"
+                  required
+                  autocomplete="tel"
+                  inputmode="tel"
+                  class="mt-2 w-full rounded-lg border border-arena-200 bg-arena-50/60 px-4 py-3 text-marino-900 transition placeholder:text-marino-900/35 focus:border-agua-400 focus:bg-white"
+                  placeholder="33 1234 5678"
+                />
+              </div>
+
+              <div>
+                <label for="correo" class="block text-sm font-semibold text-marino-900">
+                  Correo
+                </label>
+                <input
+                  id="correo"
+                  name="correo"
+                  type="email"
+                  autocomplete="email"
+                  class="mt-2 w-full rounded-lg border border-arena-200 bg-arena-50/60 px-4 py-3 text-marino-900 transition placeholder:text-marino-900/35 focus:border-agua-400 focus:bg-white"
+                  placeholder="correo@ejemplo.com"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label for="tipo" class="block text-sm font-semibold text-marino-900">
+                Tipo de proyecto
+              </label>
+              <select
+                id="tipo"
+                name="tipo"
+                class="mt-2 w-full rounded-lg border border-arena-200 bg-arena-50/60 px-4 py-3 text-marino-900 transition focus:border-agua-400 focus:bg-white"
+              >
+                {tiposProyecto.map((tipo) => <option value={tipo}>{tipo}</option>)}
+              </select>
+            </div>
+
+            <div>
+              <label for="mensaje" class="block text-sm font-semibold text-marino-900">
+                Cuéntenos del proyecto
+              </label>
+              <textarea
+                id="mensaje"
+                name="mensaje"
+                rows="4"
+                class="mt-2 w-full resize-y rounded-lg border border-arena-200 bg-arena-50/60 px-4 py-3 text-marino-900 transition placeholder:text-marino-900/35 focus:border-agua-400 focus:bg-white"
+                placeholder="Medidas aproximadas, ubicación, si es obra nueva o remodelación…"></textarea>
+            </div>
+
+            {/* Trampa para bots: un humano nunca llena este campo. */}
+            <input
+              type="text"
+              name="_gotcha"
+              tabindex="-1"
+              autocomplete="off"
+              class="absolute -left-[9999px]"
+              aria-hidden="true"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="mt-7 w-full rounded-xl bg-marino-700 px-6 py-4 font-bold text-white transition hover:bg-marino-600 disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={!formEndpoint}
+          >
+            Enviar solicitud
+          </button>
+
+          {
+            !formEndpoint && (
+              <p class="mt-4 rounded-lg bg-oro-400/15 px-4 py-3 text-sm text-marino-900/75">
+                <strong>Pendiente de configurar:</strong> defina{' '}
+                <code class="rounded bg-marino-900/8 px-1.5 py-0.5 text-[0.8em]">
+                  PUBLIC_FORM_ENDPOINT
+                </code>{' '}
+                en el archivo <code class="rounded bg-marino-900/8 px-1.5 py-0.5 text-[0.8em]">.env</code>{' '}
+                para activar el envío. Mientras tanto, el botón de WhatsApp sí funciona.
+              </p>
+            )
+          }
+
+          <p class="mt-4 text-center text-xs text-marino-900/45">
+            Sus datos se usan únicamente para responder su solicitud.
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,119 @@
+---
+import '../styles/global.css';
+import { site, contacto, direccionUnaLinea } from '../data/site';
+
+interface Props {
+  titulo?: string;
+  descripcion?: string;
+}
+
+const {
+  titulo = `${site.nombre} — ${site.tagline} | Zapopan, Jalisco`,
+  descripcion = site.descripcion,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+
+/**
+ * Datos estructurados de negocio local: es lo que permite aparecer en las
+ * búsquedas de "constructor de albercas en Guadalajara" con ficha enriquecida.
+ */
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'GeneralContractor',
+  name: site.nombre,
+  description: site.descripcion,
+  url: site.url,
+  foundingDate: String(site.fundacion),
+  telephone: contacto.telefonos.map((t) => t.tel),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: `${contacto.direccion.calle}, ${contacto.direccion.colonia}`,
+    postalCode: contacto.direccion.cp,
+    addressLocality: contacto.direccion.ciudad,
+    addressRegion: contacto.direccion.estado,
+    addressCountry: 'MX',
+  },
+  areaServed: { '@type': 'Country', name: 'México' },
+  sameAs: contacto.redes.map((r) => r.url),
+  knowsAbout: [
+    'Construcción de piscinas en concreto armado',
+    'Mantenimiento de albercas',
+    'Equipos de filtrado y climatización para piscinas',
+  ],
+};
+---
+
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.nombre} />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="es_MX" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="theme-color" content="#1b4c9e" />
+    <meta name="geo.region" content="MX-JAL" />
+    <meta name="geo.placename" content={direccionUnaLinea} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  </head>
+
+  <body>
+    <a
+      href="#contenido"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-marino-700 focus:px-5 focus:py-3 focus:text-white"
+    >
+      Saltar al contenido
+    </a>
+
+    <slot />
+
+    <script>
+      // Aparición progresiva de las secciones al entrar en pantalla.
+      // Si el usuario pidió menos movimiento, el CSS ya deja todo visible.
+      const prefiereMenosMovimiento = window.matchMedia(
+        '(prefers-reduced-motion: reduce)',
+      ).matches;
+
+      if (!prefiereMenosMovimiento) {
+        const observador = new IntersectionObserver(
+          (entradas) => {
+            for (const entrada of entradas) {
+              if (entrada.isIntersecting) {
+                entrada.target.classList.add('visible');
+                observador.unobserve(entrada.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px' },
+        );
+
+        for (const el of document.querySelectorAll('.revelar')) {
+          observador.observe(el);
+        }
+      }
+    </script>
+  </body>
+</html>

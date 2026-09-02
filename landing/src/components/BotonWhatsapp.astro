@@ -1,0 +1,18 @@
+---
+import { contacto, whatsappUrl } from '../data/site';
+import Icono from './Icono.astro';
+---
+
+{
+  contacto.mostrarWhatsapp && (
+    <a
+      href={whatsappUrl}
+      target="_blank"
+      rel="noopener"
+      class="fixed right-4 bottom-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#25d366] text-white shadow-lg shadow-marino-950/25 transition hover:scale-105 hover:bg-[#1fbe5a] sm:right-6 sm:bottom-6 sm:h-15 sm:w-15"
+      aria-label="Escribir por WhatsApp a Piscinas Acuarel"
+    >
+      <Icono nombre="whatsapp" class="h-7 w-7" />
+    </a>
+  )
+}

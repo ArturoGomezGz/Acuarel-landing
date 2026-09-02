@@ -1,0 +1,29 @@
+---
+import { aniosExperiencia } from '../data/site';
+import { clientes } from '../data/clientes';
+
+const datos = [
+  { valor: `${aniosExperiencia}+`, etiqueta: 'años de experiencia', detalle: 'Fundada en 1980' },
+  { valor: `${clientes.length}+`, etiqueta: 'obras entregadas', detalle: 'Hoteles, gobiernos y residencias' },
+  { valor: 'Nacional', etiqueta: 'cobertura', detalle: 'Trabajos en toda la República' },
+  { valor: 'NSPI', etiqueta: 'normas de construcción', detalle: 'National Pool and Spa Institute' },
+];
+---
+
+<section class="border-b border-arena-200 bg-arena-50" aria-label="Por qué elegirnos">
+  <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+    <dl class="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4">
+      {
+        datos.map((dato) => (
+          <div class="revelar border-l-2 border-oro-400 pl-4 sm:pl-5">
+            <dt class="font-display text-3xl font-semibold text-marino-700 sm:text-4xl">
+              {dato.valor}
+            </dt>
+            <dd class="mt-1.5 text-sm font-semibold text-marino-900">{dato.etiqueta}</dd>
+            <dd class="mt-0.5 text-sm text-marino-900/55">{dato.detalle}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>

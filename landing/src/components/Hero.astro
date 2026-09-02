@@ -1,0 +1,64 @@
+---
+import { Image } from 'astro:assets';
+import { velasVallartaNoche } from '../data/proyectos';
+import { aniosExperiencia, whatsappUrl } from '../data/site';
+import Icono from './Icono.astro';
+---
+
+<section id="inicio" class="relative isolate flex min-h-[100svh] items-end overflow-hidden">
+  <Image
+    src={velasVallartaNoche}
+    alt="Albercas iluminadas al anochecer en el desarrollo Velas Vallarta, Puerto Vallarta"
+    widths={[640, 1024, 1600, 2000]}
+    sizes="100vw"
+    class="absolute inset-0 -z-10 h-full w-full object-cover"
+    loading="eager"
+    fetchpriority="high"
+  />
+
+  <div
+    class="absolute inset-0 -z-10 bg-gradient-to-t from-marino-950 via-marino-950/70 to-marino-950/45"
+  >
+  </div>
+
+  <div class="mx-auto w-full max-w-7xl px-4 pt-28 pb-14 sm:px-6 sm:pb-16 lg:px-8 lg:pb-20">
+    <p
+      class="mb-5 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-semibold tracking-widest text-white uppercase backdrop-blur"
+    >
+      Desde 1980 · {aniosExperiencia} años construyendo
+    </p>
+
+    <h1
+      class="max-w-3xl font-display text-4xl leading-[1.06] font-semibold text-balance text-white sm:text-5xl lg:text-6xl"
+    >
+      La piscina que imagina,{' '}
+      <span class="text-oro-400">construida para durar.</span>
+    </h1>
+
+    <p class="mt-5 max-w-xl text-base leading-relaxed text-pretty text-white/80 sm:text-lg">
+      Diseño y construcción en concreto armado, equipamiento y mantenimiento.
+      Hoteles, residencias, escuelas de natación y balnearios en toda la República
+      Mexicana — bajo las normas del National Pool and Spa Institute.
+    </p>
+
+    <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+      <a
+        href={whatsappUrl}
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center justify-center gap-2.5 rounded-xl bg-oro-400 px-7 py-4 text-base font-bold text-marino-900 shadow-lg shadow-marino-950/30 transition hover:bg-oro-300 hover:shadow-xl"
+      >
+        <Icono nombre="whatsapp" class="h-5 w-5" />
+        Cotizar por WhatsApp
+      </a>
+
+      <a
+        href="#proyectos"
+        class="inline-flex items-center justify-center gap-2.5 rounded-xl border border-white/30 bg-white/10 px-7 py-4 text-base font-semibold text-white backdrop-blur transition hover:bg-white/20"
+      >
+        Ver proyectos
+        <Icono nombre="flecha" class="h-4 w-4" />
+      </a>
+    </div>
+  </div>
+</section>

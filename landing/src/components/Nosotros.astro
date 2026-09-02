@@ -1,0 +1,87 @@
+---
+import { Image } from 'astro:assets';
+import mosaico from '../assets/proyectos/mosaico-decorativo.jpg';
+import { aniosExperiencia } from '../data/site';
+import TituloSeccion from './TituloSeccion.astro';
+
+const mercados = [
+  'Residencias',
+  'Hoteles y desarrollos turísticos',
+  'Escuelas de natación',
+  'Colegios',
+  'Hospitales y rehabilitación',
+  'Balnearios',
+  'Clubes de golf',
+  'Gobiernos municipales',
+];
+---
+
+<section id="nosotros" class="bg-white py-20 lg:py-28">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+      <div>
+        <TituloSeccion
+          etiqueta="Quiénes somos"
+          titulo="Una empresa tapatía con más de cuatro décadas bajo el agua"
+        />
+
+        <div class="revelar mt-6 space-y-5 text-lg leading-relaxed text-marino-900/70">
+          <p>
+            Piscinas Acuarel nació en Guadalajara en <strong class="text-marino-900">1980</strong>{' '}
+            con una misión que no ha cambiado en {aniosExperiencia} años: la satisfacción
+            entera del cliente, con un servicio de inmejorable calidad en construcción,
+            equipamiento, diseño y mantenimiento de piscinas.
+          </p>
+          <p>
+            Con el tiempo sumamos toda la gama de filtración, climatización y decoración,
+            y con ella nuevos mercados. Hoy atendemos desde una alberca residencial hasta
+            un vaso semiolímpico o el conjunto de albercas de un desarrollo hotelero.
+          </p>
+          <p>
+            Construimos bajo las normas del{' '}
+            <strong class="text-marino-900">National Pool and Spa Institute</strong>{' '}
+            de los Estados Unidos, y nuestro equipo está siempre dispuesto a servir con la
+            experiencia y la capacidad que usted requiere para que todo salga bien.
+          </p>
+        </div>
+
+        <div class="revelar mt-10">
+          <p class="text-xs font-bold tracking-[0.18em] text-marino-900/45 uppercase">
+            Atendemos
+          </p>
+          <ul class="mt-4 flex flex-wrap gap-2">
+            {
+              mercados.map((mercado) => (
+                <li class="rounded-full border border-arena-200 bg-arena-50 px-3.5 py-1.5 text-sm font-medium text-marino-800">
+                  {mercado}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+      <div class="revelar relative">
+        <Image
+          src={mosaico}
+          alt="Piscina residencial de forma libre con un mural de mosaico veneciano en el fondo"
+          widths={[600, 1000, 1400]}
+          sizes="(min-width: 1024px) 45vw, 92vw"
+          class="aspect-4/3 w-full rounded-2xl object-cover shadow-2xl shadow-marino-900/15"
+          loading="lazy"
+        />
+
+        <div
+          class="absolute -bottom-6 -left-4 rounded-2xl bg-marino-700 px-7 py-5 shadow-xl sm:-left-8"
+        >
+          <p class="font-display text-4xl leading-none font-semibold text-oro-400">
+            {aniosExperiencia}
+          </p>
+          <p class="mt-1.5 text-sm leading-tight font-medium text-white/85">
+            años de<br />experiencia
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

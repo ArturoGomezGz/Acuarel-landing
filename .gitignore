@@ -1,0 +1,13 @@
+# Dependencias y artefactos de build (el proyecto Astro tiene su propio .gitignore)
+node_modules/
+dist/
+
+# Variables de entorno
+.env
+.env.*
+!.env.example
+
+# Sistema operativo / editores
+.DS_Store
+Thumbs.db
+.idea/
