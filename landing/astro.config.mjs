@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://www.piscinasacuarel.com',
+  site: 'https://landing.piscinasacuarel.com',
 
   vite: {
     plugins: [tailwindcss()],
